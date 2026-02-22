@@ -18,7 +18,7 @@ let camera = 0
 
 
 function animate() {
-    car.update()
+    car.update(road.borders)
     canvas.height = window.innerHeight
 
     camera = car.y - canvas.height * .8

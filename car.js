@@ -10,12 +10,14 @@ class Car {
         this.friction = .05
         this.maxSpeed = 5
         this.angle = 0
-        this.controls = new Controls()
 
+        this.controls = new Controls()
+        this.sensor = new Sensor(this)
     }
 
-    update() {
+    update(borders) {
         this.#move()
+        this.sensor.update(borders)
     }
 
 
@@ -55,8 +57,9 @@ class Car {
         )
 
         ctx.fill()
-
+        
         ctx.restore()
+        this.sensor.render(ctx, camera)
     }
 
 }
