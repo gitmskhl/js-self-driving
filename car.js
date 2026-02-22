@@ -39,10 +39,10 @@ class Car {
         this.y -= Math.cos(this.angle) * this.speed
     }
 
-    render(ctx) {
+    render(ctx, camera) {
 
         ctx.save()
-        ctx.translate(this.x, this.y)
+        ctx.translate(this.x, this.y - camera)
         ctx.rotate(-this.angle)
 
         ctx.fillStyle = "black"
