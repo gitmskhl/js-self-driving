@@ -1,7 +1,7 @@
 class Sensor {
     constructor(car) {
         this.car = car
-        this.rayCount = 50
+        this.rayCount = 5
         this.rayLength = 500
         this.raySpread = Math.PI / 4
 
@@ -11,7 +11,7 @@ class Sensor {
 
 
 
-    update(borders) {
+    update(borders, traffic) {
         this.rays = []
         this.freeRays = []
         for (let i = 0; i < this.rayCount; ++i) {
@@ -29,21 +29,21 @@ class Sensor {
 
             let ray = [start, end]
             this.rays.push(ray)
-            this.freeRays.push(this.#getFreeRay(ray, borders))
-
+            let inter_ray = this.#getFreeRay(ray, borders)
+            for (let traffic_car of traffic)
+                inter_ray = this.#getFreeRay(inter_ray, polygon2borders(traffic_car.polygon), getStrongIntersection)
+            this.freeRays.push(inter_ray)
         }
     }
 
-    #getFreeRay(ray, borders) {
-        let inters = borders.map(border => getIntersection(
+    #getFreeRay(ray, borders, check=getIntersection) {
+        let inters = borders.map(border => check(
             ray[0], ray[1],
             border[0], border[1]
         )).filter(x => x)
-        console.log(inters)
         if (inters.length == 0) return ray
         let minOffset = Math.min(...inters.map(x => x.offset))
         let mins = inters.filter(x => x.offset === minOffset)
-        console.log(mins)
         return [
             ray[0],
             { x: mins[0].x, y: mins[0].y }
