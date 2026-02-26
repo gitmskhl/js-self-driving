@@ -12,6 +12,7 @@ class Car {
         this.angle = 0
 
         this.userBrain = controlType === "AI"
+        this.color = controlType === "DUMMY" ? "red" : "blue"
 
         this.controls = new Controls(controlType)
         if (controlType != "DUMMY") {
@@ -96,9 +97,9 @@ class Car {
         return points
     }
 
-    render(ctx, camera) {
+    render(ctx, camera, drawSensors=false) {
 
-        ctx.fillStyle = this.damaged ? "gray" : "blue"
+        ctx.fillStyle = this.damaged ? "gray" : this.color
 
         ctx.beginPath()
         ctx.moveTo(this.polygon[0].x, this.polygon[0].y - camera)
@@ -107,7 +108,7 @@ class Car {
         ctx.lineTo(this.polygon[3].x, this.polygon[3].y - camera)
         ctx.fill()
 
-        if (this.sensor)
+        if (drawSensors && this.sensor)
             this.sensor.render(ctx, camera)
     }
 
