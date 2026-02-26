@@ -91,4 +91,4 @@ Recommended workflow:
 
 ## License
 
-Add your preferred license here (for example, MIT).
+This project is licensed under the MIT License.
