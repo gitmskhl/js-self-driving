@@ -1,5 +1,5 @@
 class Car {
-    constructor(x, y, width, height, controlType, maxSpeed=3) {
+    constructor(x, y, width, height, controlType, maxSpeed = 3) {
         this.x = x
         this.y = y
         this.width = width
@@ -11,9 +11,15 @@ class Car {
         this.maxSpeed = maxSpeed
         this.angle = 0
 
+        this.userBrain = controlType === "AI"
+
         this.controls = new Controls(controlType)
-        if (controlType != "DUMMY")
+        if (controlType != "DUMMY") {
             this.sensor = new Sensor(this)
+            this.brain = new NeuralNetwork(
+                [this.sensor.rayCount, 6, 4]
+            )
+        }
 
         this.damaged = false
     }
@@ -24,8 +30,18 @@ class Car {
             this.polygon = this.#createPolygon()
             this.damaged = this.#checkForCollision(borders, traffic)
         }
-        if (this.sensor)
+        if (this.sensor) {
             this.sensor.update(borders, traffic)
+            this.offsets = this.sensor.freeRays.map(x => x[2])
+            const outputs = NeuralNetwork.feedForward(this.offsets, this.brain)
+
+            if (this.userBrain) {
+                this.controls.forward = outputs[0]
+                this.controls.left = outputs[1]
+                this.controls.right = outputs[2]
+                this.controls.reverse = outputs[3]
+            }
+        }
     }
 
     #checkForCollision(borders, traffic) {

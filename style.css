@@ -5,6 +5,10 @@ body {
     overflow: hidden;
 }
 
-#myCanvas {
+#carCanvas {
     background-color: darkgray;
+}
+
+#networkCanvas {
+    background-color: rgb(40, 40, 40);
 }

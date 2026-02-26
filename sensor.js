@@ -41,12 +41,13 @@ class Sensor {
             ray[0], ray[1],
             border[0], border[1]
         )).filter(x => x)
-        if (inters.length == 0) return ray
+        if (inters.length == 0) return [...ray, 0]
         let minOffset = Math.min(...inters.map(x => x.offset))
         let mins = inters.filter(x => x.offset === minOffset)
         return [
             ray[0],
-            { x: mins[0].x, y: mins[0].y }
+            { x: mins[0].x, y: mins[0].y },
+            1 - mins[0].offset
         ]
     }
 
