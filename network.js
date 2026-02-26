@@ -15,6 +15,33 @@ class NeuralNetwork {
         return inputs
     }
 
+    static mutate(network, amount=1) {
+        network.levels.forEach(level => {
+            for (let i = 0; i < level.biases; ++i) {
+                level.biases[i] = lerp(
+                    level.biases[i],
+                    Math.random() * 2 - 1,
+                    amount
+                )
+            }
+            
+            for (let i = 0; i < level.inputs.length; ++i) {
+                for (let j = 0; j < level.outputs.length; ++j) {
+                    level.weights[i][j] = lerp(
+                        level.weights[i][j],
+                        Math.random() * 2 - 1,
+                        amount
+                    )
+                }
+            }
+        })
+    }
+
+    static mean(network1, network2) {
+        for (let i = 0; i < network1.levels.length; ++i)
+            Level.mean(network1.levels[i], network2.levels[i])
+    }
+
 }
 
 class Level {
@@ -50,6 +77,14 @@ class Level {
             level.outputs[j] = sum > level.biases[j] ? 1 : 0
         }
         return level.outputs
+    }
+
+    static mean(level1, level2) {
+        for (let i = 0; i < level1.biases.length; ++i)
+            level1.biases[i] = (level1.biases[i] + level2.biases[i]) / 2
+        for (let i = 0; i < level1.inputs.length; ++i)
+            for (let j = 0; j < level1.outputs.length; ++j)
+                level1.weights[i][j] = (level1.weights[i][j] + level2.weights[i][j]) / 2
     }
 
 }
